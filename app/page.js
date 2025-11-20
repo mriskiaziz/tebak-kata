@@ -150,12 +150,11 @@ export default function WordleGame() {
         .gray { background: #787c7e; color: white; }
 
         .keyboard {
-          margin-top: 20px;
+          margin-top: 10px;
           display: flex;
           flex-direction: column;
           gap: 8px;
           width: 100%;
-          max-width: 500px;
         }
         .key-row { display: flex; justify-content: center; gap: 4px; }
         .key {
@@ -192,7 +191,6 @@ export default function WordleGame() {
           z-index: 50;
         }
         .modal-content {
-          background: white;
           padding: 20px 30px;
           border-radius: 10px;
           max-width: 600px;
@@ -212,7 +210,7 @@ export default function WordleGame() {
       {/* MODAL */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-content bg-white dark:bg-gray-900 " onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <h2 className=" font-semibold text-2xl pb-4 " >Cara Bermain</h2>
               <span className="modal-close" onClick={() => setShowModal(false)}>×</span>
@@ -295,7 +293,7 @@ export default function WordleGame() {
 
       {/* KEYBOARD */}
       <div className="flex justify-center mt-4">
-        <div className="keyboard">
+        <div className="keyboard p-0">
           {[
             "QWERTYUIOP".split(""),
             "ASDFGHJKL".split(""),
