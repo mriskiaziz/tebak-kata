@@ -157,10 +157,9 @@ export default function WordleGame() {
           width: 100%;
           max-width: 500px;
         }
-        .key-row { display: flex; justify-content: center; gap: 7px; }
+        .key-row { display: flex; justify-content: center; gap: 4px; }
         .key {
           padding: 10px 14px;
-          background: #d3d6da;
           border-radius: 6px;
           font-size: 16px;
           cursor: pointer;
@@ -173,7 +172,7 @@ export default function WordleGame() {
         @media (max-width: 480px) {
           .box { width: 60px; height: 60px; font-size: 20px; }
           .keyboard { gap: 6px; }
-          .key { padding: 8px 10px; font-size: 14px; }
+          .key { padding: 10px 10px; font-size: 14px; }
           .key.special { padding: 8px 14px; font-size: 14px; }
         }
         @media (max-width: 360px) {
@@ -242,7 +241,7 @@ export default function WordleGame() {
 
       {/* BUTTON MODAL */}
       <div className="flex justify-center items-center">
-        <div className="flex my-5 min-w-md" >
+        <div className="flex my-5 md:min-w-md px-1" >
           <button
             onClick={() => setShowModal(true)}
             className="mr-20 cursor-pointer focus:outline-none"
@@ -306,7 +305,7 @@ export default function WordleGame() {
               {row.map((key) => (
                 <div
                   key={key}
-                  className={`key ${["ENTER", "DEL"].includes(key) ? "special" : ""}`}
+                  className={`key bg-gray-300 dark:bg-gray-800 ${["ENTER", "DEL"].includes(key) ? "special" : ""}`}
                   onClick={() => handleKeyClick(key)}
                 >
                   {key}
