@@ -1,15 +1,37 @@
 "use client";
 import { useState, useEffect, useRef, useMemo } from "react";
 import cekKata from "@/lib/logic";
-import { validWords } from "@/lib/word5";
+import { IoMdHelpCircleOutline } from "react-icons/io";
+import Swal from "sweetalert2";
 
 export default function WordleGame() {
-  const ROWS = 5;
+  const ROWS = 6;
   const COLS = 5;
 
-  const JAWABAN = useMemo(() => {
-    return validWords[Math.floor(Math.random() * validWords.length)];
+  // ----------- MUAT VALID WORDS DARI FILE TXT ----------- //
+  const [validWords, setValidWords] = useState([]); // ⬅ perubahan
+
+  useEffect(() => {
+    async function loadWords() {
+      const res = await fetch("/wordlist.txt");
+      const text = await res.text();
+
+      const list = text
+        .split("\n")
+        .map((w) => w.trim().toLowerCase())
+        .filter((w) => w.length === 5); // hanya 5 huruf
+
+      setValidWords(list);
+    }
+    loadWords();
   }, []);
+  // ------------------------------------------------------- //
+
+
+  const JAWABAN = useMemo(() => {
+    if (validWords.length === 0) return ""; // ⬅ perubahan
+    return validWords[Math.floor(Math.random() * validWords.length)];
+  }, [validWords]); // ⬅ perubahan
 
   const [grid, setGrid] = useState(
     Array.from({ length: ROWS }, () => Array(COLS).fill(""))
@@ -76,7 +98,7 @@ export default function WordleGame() {
       return;
     }
     if (!validWords.includes(guess)) {
-      alert("Kata tidak ada di wordlist!", "error");
+      alert("Kata tidak ada di KKBI!", "error");
       return;
     }
     const warna = cekKata(JAWABAN, guess);
@@ -180,7 +202,7 @@ export default function WordleGame() {
           overflow-y: auto;
         }
         .modal-header { display: flex; justify-content: space-between; align-items: center; }
-        .modal-close { cursor: pointer; font-weight: bold; font-size: 20px; }
+        .modal-close { cursor: pointer; font-weight: bold; font-size: 2rem; }
         .modal-body { margin-top: 10px; line-height: 1.5; font-size: 14px; }
         .example { display: flex; gap:5px; margin:5px 0; }
         .example .green { width:25px; height:25px; text-align:center; display:flex; justify-content:center; align-items:center; color:white; border-radius:3px; font-weight:bold; font-size:14px;}
@@ -188,25 +210,15 @@ export default function WordleGame() {
         .example .gray { width:25px; height:25px; text-align:center; display:flex; justify-content:center; align-items:center; color:white; border-radius:3px; font-weight:bold; font-size:14px;}
       `}</style>
 
-      {/* BUTTON MODAL */}
-      <div className="flex justify-center mt-4">
-        <button
-          onClick={() => setShowModal(true)}
-          className="key special"
-        >
-          Cara Bermain
-        </button>
-      </div>
-
       {/* MODAL */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2 className=" font-semibold" >Cara Bermain</h2>
+              <h2 className=" font-semibold text-2xl pb-4 " >Cara Bermain</h2>
               <span className="modal-close" onClick={() => setShowModal(false)}>×</span>
             </div>
-            <div className="modal-body space-y-2">
+            <div className="modal-body space-y-2 pb-4">
               <p>Terdapat 1 kata rahasia yang bisa kamu tebak. Tebak Kata dalam 5 kesempatan.</p>
               <p>Setiap tebakan harus merupakan kata valid 5 huruf sesuai KBBI. Tekan tombol ENTER untuk mengirimkan jawaban.</p>
               <p>Setelah jawaban dikirimkan, warna kotak akan berubah untuk menunjukkan seberapa dekat tebakanmu dari kata rahasia.</p>
@@ -228,23 +240,36 @@ export default function WordleGame() {
         </div>
       )}
 
-      <h1 className="text-3xl font-bold text-center mt-9 mb-4">
-        <span className="text-red-700">Y</span>
-        <span className="text-orange-700">u</span>
-        <span className="text-amber-700">k</span>
-        <span className="text-yellow-700">k</span>
-        &nbsp;
-        <span className="text-lime-700">T</span>
-        <span className="text-green-700">e</span>
-        <span className="text-emerald-700">b</span>
-        <span className="text-teal-700">a</span>
-        <span className="text-cyan-700">k</span>
-        &nbsp;
-        <span className="text-sky-700">K</span>
-        <span className="text-blue-700">a</span>
-        <span className="text-indigo-700">t</span>
-        <span className="text-purple-700">a</span>
-      </h1>
+      {/* BUTTON MODAL */}
+      <div className="flex justify-center items-center">
+        <div className="flex my-5 min-w-md" >
+          <button
+            onClick={() => setShowModal(true)}
+            className="mr-20 cursor-pointer focus:outline-none"
+          >
+            <IoMdHelpCircleOutline size={35} />
+          </button>
+
+          <h1 className="text-3xl font-bold text-centerborder">
+            <span className="text-red-700">Y</span>
+            <span className="text-orange-700">u</span>
+            <span className="text-amber-700">k</span>
+            <span className="text-yellow-700">k</span>
+            &nbsp;
+            <span className="text-lime-700">T</span>
+            <span className="text-green-700">e</span>
+            <span className="text-emerald-700">b</span>
+            <span className="text-teal-700">a</span>
+            <span className="text-cyan-700">k</span>
+            &nbsp;
+            <span className="text-sky-700">K</span>
+            <span className="text-blue-700">a</span>
+            <span className="text-indigo-700">t</span>
+            <span className="text-purple-700">a</span>
+          </h1>
+        </div>
+      </div>
+
 
       <div className="px-4 max-w-lg mx-auto">
         <hr className="mb-8" />
@@ -252,7 +277,7 @@ export default function WordleGame() {
 
 
       {/* GRID */}
-      <div className="justify-center" style={{ display: "grid", gap: "10px" }}>
+      <div className="justify-center" style={{ display: "grid", gap: "5px" }}>
         {grid.map((row, r) => (
           <div style={{ display: "flex", gap: "8px" }} key={r}>
             {row.map((letter, c) => (
@@ -300,6 +325,6 @@ const alert = (msg, icon) => {
     icon: icon,
     title: msg,
     showConfirmButton: false,
-    timer: 1500
+    timer: 2000,
   });
 }
