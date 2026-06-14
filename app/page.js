@@ -22,7 +22,6 @@ export default function WordleGame() {
         .filter((w) => w.length === 5)
         .filter((w) => new Set(w).size === 5); // ⬅ semua huruf harus unik
 
-
       setValidWords(list);
     }
     loadWords();
@@ -35,10 +34,10 @@ export default function WordleGame() {
   }, [validWords]);
 
   const [grid, setGrid] = useState(
-    Array.from({ length: ROWS }, () => Array(COLS).fill(""))
+    Array.from({ length: ROWS }, () => Array(COLS).fill("")),
   );
   const [evaluations, setEvaluations] = useState(
-    Array.from({ length: ROWS }, () => Array(COLS).fill(""))
+    Array.from({ length: ROWS }, () => Array(COLS).fill("")),
   );
 
   const [currentRow, setCurrentRow] = useState(0);
@@ -161,8 +160,8 @@ export default function WordleGame() {
     <>
       <style>{`
         .box {
-          width: 65px;
-          height: 65px;
+          width: 50px;
+          height: 50px;
           font-size: 26px;
           text-align: center;
           caret-color: transparent;
@@ -196,20 +195,65 @@ export default function WordleGame() {
           background: #ccc;
         }
         .key.special { padding: 10px 22px; }
+        .modal-overlay {
+          position: fixed;
+          inset: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          z-index: 50;
+        }
+        .modal-content {
+          max-width: 420px;
+          width: min(90%, 420px);
+          border-radius: 16px;
+          padding: 24px;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+          background: #ffffff;
+        }
+        .modal-header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          margin-bottom: 16px;
+        }
+        .modal-close {
+          cursor: pointer;
+          font-size: 1.5rem;
+          line-height: 1;
+          padding: 4px 8px;
+          border-radius: 8px;
+          transition: background 0.2s;
+        }
+        .modal-close:hover {
+          background: rgba(0, 0, 0, 0.05);
+        }
       `}</style>
 
       {/* MODAL */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div className="modal-content bg-white dark:bg-gray-900" onClick={(e) => e.stopPropagation()}>
+          <div
+            className="modal-content bg-white"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-header">
               <h2 className="font-semibold text-2xl pb-4">Cara Bermain</h2>
-              <span className="modal-close" onClick={() => setShowModal(false)}>×</span>
+              <span className="modal-close" onClick={() => setShowModal(false)}>
+                ×
+              </span>
             </div>
             <div className="modal-body space-y-2 pb-4">
               <p>Tebak kata rahasia dalam 6 kesempatan.</p>
-              <p>Setiap tebakan harus merupakan kata valid 5 huruf sesuai KBBI.</p>
-              <p>Setelah kamu menekan ENTER, warna kotak dan keyboard akan berubah sesuai kecocokan huruf.</p>
+              <p>
+                Setiap tebakan harus merupakan kata valid 5 huruf sesuai KBBI.
+              </p>
+              <p>
+                Setelah kamu menekan ENTER, warna kotak dan keyboard akan
+                berubah sesuai kecocokan huruf.
+              </p>
             </div>
           </div>
         </div>
@@ -218,7 +262,10 @@ export default function WordleGame() {
       {/* HEADER */}
       <div className="flex justify-center items-center">
         <div className="flex my-5 md:min-w-md px-1">
-          <button onClick={() => setShowModal(true)} className="mr-20 cursor-pointer">
+          <button
+            onClick={() => setShowModal(true)}
+            className="mr-20 cursor-pointer"
+          >
             <IoMdHelpCircleOutline size={35} />
           </button>
 
@@ -243,7 +290,7 @@ export default function WordleGame() {
       {/* GRID */}
       <div className="justify-center" style={{ display: "grid", gap: "5px" }}>
         {grid.map((row, r) => (
-          <div style={{ display: "flex", gap: "8px" }} key={r}>
+          <div style={{ display: "flex", gap: "5px" }} key={r}>
             {row.map((letter, c) => (
               <input
                 key={c}
@@ -269,8 +316,9 @@ export default function WordleGame() {
               {row.map((key) => (
                 <div
                   key={key}
-                  className={`key ${["ENTER", "DEL"].includes(key) ? "special" : ""
-                    } ${keyColors[key.toLowerCase()] || ""}`}
+                  className={`key ${
+                    ["ENTER", "DEL"].includes(key) ? "special" : ""
+                  } ${keyColors[key.toLowerCase()] || ""}`}
                   onClick={() => handleKeyClick(key)}
                 >
                   {key}
